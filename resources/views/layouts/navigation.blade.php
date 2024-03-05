@@ -9,14 +9,36 @@
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
-
+                @if (Auth::user()->role === 'admin')
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('event-categories.create')" :active="request()->routeIs('dashboard')">
+                        {{ __('Add_Categorie') }}
                     </x-nav-link>
                 </div>
+                
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('event-categories.index')" :active="request()->routeIs('dashboard')">
+                        {{ __('All_categories') }}
+                    </x-nav-link>
+                </div>
+
+                @elseif(Auth::user()->role === 'user')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('user') }}
+                    </x-nav-link>
+                </div>
+
+                @elseif(Auth::user()->role === 'organizer')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('organizer') }}
+                    </x-nav-link>
+                </div>
+                @endif
             </div>
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
