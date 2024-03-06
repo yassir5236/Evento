@@ -32,8 +32,14 @@
 
                 @elseif(Auth::user()->role === 'organizer')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('organizer') }}
+                    <x-nav-link :href="route('events.create')" :active="request()->routeIs('dashboard')">
+                        {{ __('add_event') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('events.index')" :active="request()->routeIs('dashboard')">
+                        {{ __('All_events') }}
                     </x-nav-link>
                 </div>
                 @endif

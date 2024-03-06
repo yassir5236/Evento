@@ -22,7 +22,10 @@ class Event extends Model
         'available_seats',
         'Mode_Validation_auto_manuel',
         'organizer_id',
+        'category_id',
     ];
+
+
 
     /**
      * The attributes that should be cast to native types.
@@ -44,6 +47,11 @@ class Event extends Model
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+        public function categories()
+    {
+        return $this->belongsToMany(EventCategory::class);
     }
 
   
