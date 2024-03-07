@@ -40,25 +40,87 @@ class EventController extends Controller
     }
 
     // Enregistrer un nouvel événement dans la base de données
+    // public function store(Request $request)
+    // {
+    //     // dd($request);
+    //     $request->validate([
+    //         'title' => 'required|string',
+    //         'description' => 'required|string',
+    //         'date' => 'required|date',
+    //         'location' => 'required|string',
+    //         'available_seats' => 'required|integer',
+    //         'Mode_Validation_auto_manuel' => 'required',
+
+    //     ]);
+
+    //     // dd($request->input(''));
+
+    //     Event::create($request->all());
+
+    //     return redirect()->route('events.index')->with('success', 'Event created successfully.');
+    // }
+
     public function store(Request $request)
-    {
-        // dd($request);
-        $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'date' => 'required|date',
-            'location' => 'required|string',
-            'available_seats' => 'required|integer',
-            'Mode_Validation_auto_manuel' => 'required',
+{
+    $request->validate([
+        'title' => 'required|string',
+        'description' => 'required|string',
+        'date' => 'required|date',
+        'location' => 'required|string',
+        'available_seats' => 'required|integer',
+        'Mode_Validation_auto_manuel' => 'required',
+    ]);
 
-        ]);
+    $eventData = $request->all();
 
-        // dd($request->input(''));
-
-        Event::create($request->all());
-
-        return redirect()->route('events.index')->with('success', 'Event created successfully.');
+    // Vérifier le mode de validation
+    if ($eventData['Mode_Validation_auto_manuel'] === 'auto') {
+        // Si le mode est automatique, marquez l'événement comme publié
+        $eventData['status'] = 'published';
+    } else {
+        // Si le mode est manuel, marquez l'événement comme brouillon ou non publié
+        $eventData['status'] = 'draft'; // ou 'unpublished'
     }
+
+    // Enregistrez l'événement avec le statut approprié
+    Event::create($eventData);
+
+    return redirect()->route('events.index')->with('success', 'Event created successfully.');
+}
+
+
+
+
+
+public function pendingEvents()
+{
+    // Récupérer les événements en attente de validation
+    $pendingEvents = Event::where('status', 'pending')->get();
+
+    // Passer les données à la vue
+    return view('admin.events', compact('pendingEvents'));
+}
+
+
+
+
+
+public function approve(Event $event)
+{
+    // Mettez en œuvre la logique pour approuver l'événement
+    $event->update(['status' => 'published']);
+
+    return redirect()->back()->with('success', 'Event approved successfully.');
+}
+
+public function reject(Event $event)
+{
+    // Mettez en œuvre la logique pour rejeter l'événement
+    $event->update(['status' => 'rejected']);
+
+    return redirect()->back()->with('success', 'Event rejected successfully.');
+}
+
 
     
     // Afficher les détails d'un événement spécifique
@@ -170,21 +232,7 @@ class EventController extends Controller
     }
 
 
-    // public function reserve(Request $request, Event $event)
-    // {
-    //     $request->validate([
-    //         'place_number' => 'required|integer|min:1',
-    //     ]);
-    
-    //     Reservation::create([
-    //         'place_number' => $request->place_number,
-    //         'user_id' => auth()->id(),
-    //         'event_id' => $event->id,
-    //         'reservations_date' => now(), // Automatiquement définie la date actuelle
-    //     ]);
-    
-    //     return redirect()->back()->with('success', 'Votre réservation a été effectuée avec succès.');
-    // }
+  
 
     public function reserve(Request $request, Event $event)
     {

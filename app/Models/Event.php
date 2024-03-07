@@ -22,6 +22,8 @@ class Event extends Model
         'available_seats',
         'Mode_Validation_auto_manuel',
         'organizer_id',
+        'status', 
+
         // 'category_id',
     ];
 
@@ -49,10 +51,7 @@ class Event extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    //     public function categories()
-    // {
-    //     return $this->belongsToMany(EventCategory::class);
-    // }
+
 
       // Définissez la relation "belongsTo" avec EventCategory
       public function category()

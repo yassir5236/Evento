@@ -6,6 +6,8 @@ use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\AdminController;
+
 
 
 
@@ -43,6 +45,12 @@ Route::middleware('auth')->group(function () {
     Route::get('event-categories/{category}/edit', [EventCategoryController::class, 'edit'])->name('event-categories.edit');
     Route::put('event-categories/{category}', [EventCategoryController::class, 'update'])->name('event-categories.update');
     Route::delete('event-categories/{category}', [EventCategoryController::class, 'destroy'])->name('event-categories.destroy');
+    Route::get('/events/pending', [EventController::class, 'pendingEvents'])->name('events.pending');
+    Route::post('/events/{event}/approve', [EventController::class, 'approve'])->name('events.approve');
+    Route::post('/events/{event}/reject', [EventController::class, 'reject'])->name('events.reject');
+    Route::get('/admin/statistics', [AdminController::class, 'statistics'])->name('admin.statistics');
+
+
 // });
 
 
