@@ -21,6 +21,7 @@ class Reservation extends Model
         'event_id',
     ];
 
+
     /**
      * The attributes that should be cast to native types.
      *

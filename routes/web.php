@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TicketController;
+
 
 
 /*
@@ -55,6 +58,31 @@ Route::middleware('auth')->group(function () {
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
 
 // });
+
+
+
+
+// Groupe de routes protégé par le middleware auth
+// Route::middleware(['auth', 'user'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/events/filter', [EventController::class, 'filter'])->name('events.filter');
+    Route::post('/events/search', [EventController::class, 'search'])->name('events.search');
+    Route::post('/events/{event}/reserve', [EventController::class, 'reserve'])->name('events.reserve');
+    Route::post('/reservations/{reservation}/tickets', [TicketController::class, 'generateTicket'])->name('tickets.generate');
+    Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+
+
+
+
+
+// });
+
 
 
 
