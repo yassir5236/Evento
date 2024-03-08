@@ -19,6 +19,8 @@ class Reservation extends Model
         'reservations_date',
         'user_id',
         'event_id',
+        'statut', // Ajoutez la colonne statut à la liste fillable
+
     ];
 
 

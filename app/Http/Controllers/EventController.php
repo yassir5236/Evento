@@ -14,12 +14,6 @@ use App\Models\Ticket;
 class EventController extends Controller
 {
 
-    // public function index()
-    // {
-        
-    //     $events = Event::paginate(10);
-    //     return view('user.index', compact('events'));
-    // }
 
 
         public function index()
@@ -40,53 +34,53 @@ class EventController extends Controller
     }
 
     // Enregistrer un nouvel événement dans la base de données
-    // public function store(Request $request)
-    // {
-    //     // dd($request);
-    //     $request->validate([
-    //         'title' => 'required|string',
-    //         'description' => 'required|string',
-    //         'date' => 'required|date',
-    //         'location' => 'required|string',
-    //         'available_seats' => 'required|integer',
-    //         'Mode_Validation_auto_manuel' => 'required',
-
-    //     ]);
-
-    //     // dd($request->input(''));
-
-    //     Event::create($request->all());
-
-    //     return redirect()->route('events.index')->with('success', 'Event created successfully.');
-    // }
-
     public function store(Request $request)
-{
-    $request->validate([
-        'title' => 'required|string',
-        'description' => 'required|string',
-        'date' => 'required|date',
-        'location' => 'required|string',
-        'available_seats' => 'required|integer',
-        'Mode_Validation_auto_manuel' => 'required',
-    ]);
+    {
+        // dd($request);
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'date' => 'required|date',
+            'location' => 'required|string',
+            'available_seats' => 'required|integer',
+            'Mode_Validation_auto_manuel' => 'required',
 
-    $eventData = $request->all();
+        ]);
 
-    // Vérifier le mode de validation
-    if ($eventData['Mode_Validation_auto_manuel'] === 'auto') {
-        // Si le mode est automatique, marquez l'événement comme publié
-        $eventData['status'] = 'published';
-    } else {
-        // Si le mode est manuel, marquez l'événement comme brouillon ou non publié
-        $eventData['status'] = 'draft'; // ou 'unpublished'
+        // dd($request->input(''));
+
+        Event::create($request->all());
+
+        return redirect()->route('events.index')->with('success', 'Event created successfully.');
     }
 
-    // Enregistrez l'événement avec le statut approprié
-    Event::create($eventData);
+//     public function store(Request $request)
+// {
+//     $request->validate([
+//         'title' => 'required|string',
+//         'description' => 'required|string',
+//         'date' => 'required|date',
+//         'location' => 'required|string',
+//         'available_seats' => 'required|integer',
+//         'Mode_Validation_auto_manuel' => 'required',
+//     ]);
 
-    return redirect()->route('events.index')->with('success', 'Event created successfully.');
-}
+//     $eventData = $request->all();
+
+//     // Vérifier le mode de validation
+//     if ($eventData['Mode_Validation_auto_manuel'] === 'auto') {
+//         // Si le mode est automatique, marquez l'événement comme publié
+//         $eventData['status'] = 'published';
+//     } else {
+//         // Si le mode est manuel, marquez l'événement comme brouillon ou non publié
+//         $eventData['status'] = 'draft'; // ou 'unpublished'
+//     }
+
+//     // Enregistrez l'événement avec le statut approprié
+//     Event::create($eventData);
+
+//     return redirect()->route('events.index')->with('success', 'Event created successfully.');
+// }
 
 
 
@@ -124,26 +118,67 @@ public function reject(Event $event)
 
     
     // Afficher les détails d'un événement spécifique
+    // public function show(Event $event)
+    // {
+    //     // Vérifier si l'utilisateur actuel a déjà réservé cet événement
+    //     $alreadyReserved = $event->reservations()->where('user_id', Auth::id())->exists();
+        
+    //     // Initialiser $ticket à null par défaut
+    //     $ticket = null;
+
+    //     // Si l'utilisateur a déjà réservé cet événement, générer le ticket
+    //     if ($alreadyReserved) {
+    //         // Récupérer la réservation de l'utilisateur
+    //         $reservation = $event->reservations()->where('user_id', Auth::id())->first();
+
+    //         // Générer le ticket
+    //         $ticket = $this->generateTicket($reservation);
+    //     }
+    
+    //     // Passer les données à la vue
+    //     return view('user.detail_event', compact('event', 'alreadyReserved', 'ticket'));
+    // }
+
+
+
+
+
     public function show(Event $event)
     {
-        // Vérifier si l'utilisateur actuel a déjà réservé cet événement
-        $alreadyReserved = $event->reservations()->where('user_id', Auth::id())->exists();
-        
-        // Initialiser $ticket à null par défaut
-        $ticket = null;
-
-        // Si l'utilisateur a déjà réservé cet événement, générer le ticket
-        if ($alreadyReserved) {
-            // Récupérer la réservation de l'utilisateur
-            $reservation = $event->reservations()->where('user_id', Auth::id())->first();
-
-            // Générer le ticket
-            $ticket = $this->generateTicket($reservation);
-        }
+        // Vérifier le mode de validation de l'événement
+        if ($event->Mode_Validation_auto_manuel === 'manuel') {
+            // Passer la variable $alreadyReserved avec une valeur par défaut à false
+            $alreadyReserved = false;
     
-        // Passer les données à la vue
-        return view('user.detail_event', compact('event', 'alreadyReserved', 'ticket'));
+            // Retourner la vue pour le mode de validation manuel
+            return view('user.detail_event_manual', compact('event', 'alreadyReserved'));
+        } else {
+            // Vérifier si l'utilisateur actuel a déjà réservé cet événement
+            $alreadyReserved = $event->reservations()->where('user_id', Auth::id())->exists();
+            
+            // Initialiser $ticket à null par défaut
+            $ticket = null;
+    
+            // Si l'utilisateur a déjà réservé cet événement, générer le ticket
+            if ($alreadyReserved) {
+                // Récupérer la réservation de l'utilisateur
+                $reservation = $event->reservations()->where('user_id', Auth::id())->first();
+    
+                // Générer le ticket
+                $ticket = $this->generateTicket($reservation);
+            }
+        
+            // Passer les données à la vue
+            return view('user.detail_event_auto', compact('event', 'alreadyReserved', 'ticket'));
+        }
     }
+    
+
+
+
+
+
+
 
     public function generateTicket(Reservation $reservation)
     {
@@ -234,26 +269,109 @@ public function reject(Event $event)
 
   
 
-    public function reserve(Request $request, Event $event)
-    {
-        $request->validate([
-            'place_number' => 'required|integer|min:1',
-        ]);
+    // public function reserve(Request $request, Event $event)
+    // {
+    //     $request->validate([
+    //         'place_number' => 'required|integer|min:1',
+    //     ]);
 
-        // Créer une nouvelle réservation
+    //     // Créer une nouvelle réservation
+    //     $reservation = Reservation::create([
+    //         'place_number' => $request->place_number,
+    //         'user_id' => auth()->id(),
+    //         'event_id' => $event->id,
+    //         'reservations_date' => now(), // Automatiquement définie la date actuelle
+    //     ]);
+
+    //     // Générer un ticket pour la réservation
+    //     $ticketController = new TicketController();
+    //     $ticket = $ticketController->generateTicket($reservation);
+
+    //     return redirect()->back()->with('success', 'Votre réservation a été effectuée avec succès. Votre ticket a été généré.');
+    // }
+
+
+
+
+// public function reserve(Request $request, Event $event)
+// {
+//     $request->validate([
+//         'place_number' => 'required|integer|min:1',
+//     ]);
+
+//     // Récupérer le mode de validation de l'événement
+//     $modeValidation = $event->Mode_Validation_auto_manuel;
+
+//     // Traiter la réservation en fonction du mode de validation
+//     if ($modeValidation === 'auto') {
+//         // Créer la réservation automatiquement
+//         $reservation = Reservation::create([
+//             'place_number' => $request->place_number,
+//             'user_id' => auth()->id(),
+//             'event_id' => $event->id,
+//             'reservations_date' => now(), // Automatiquement définie la date actuelle
+//         ]);
+
+//         // Générer un ticket pour la réservation
+//         $this->generateTicket($reservation);
+
+//         return redirect()->back()->with('success', 'Votre réservation a été effectuée avec succès. Votre ticket a été généré.');
+//     } else {
+//         // Créer la réservation mais la marquer comme en attente de validation
+//         Reservation::create([
+//             'place_number' => $request->place_number,
+//             'user_id' => auth()->id(),
+//             'event_id' => $event->id,
+//             'reservations_date' => now(), // Automatiquement définie la date actuelle
+//             'status' => 'pending', // Marquer comme en attente de validation
+//         ]);
+
+//         return redirect()->back()->with('success', 'Votre demande de réservation a été soumise avec succès. Elle est en attente de validation par l\'organisateur.');
+//     }
+// }
+
+public function reserve(Request $request, Event $event)
+{
+    $request->validate([
+        'place_number' => 'required|integer|min:1|max:1', // Limiter à une seule place
+    ]);
+
+    // Récupérer le mode de validation de l'événement
+    $modeValidation = $event->Mode_Validation_auto_manuel;
+
+    // Traiter la réservation en fonction du mode de validation
+    if ($modeValidation === 'auto') {
+        // Créer la réservation automatiquement
         $reservation = Reservation::create([
-            'place_number' => $request->place_number,
+            'place_number' => 1, // Réserver une seule place
             'user_id' => auth()->id(),
             'event_id' => $event->id,
-            'reservations_date' => now(), // Automatiquement définie la date actuelle
+            'reservations_date' => now(), 
         ]);
 
         // Générer un ticket pour la réservation
-        $ticketController = new TicketController();
-        $ticket = $ticketController->generateTicket($reservation);
+        $this->generateTicket($reservation);
 
         return redirect()->back()->with('success', 'Votre réservation a été effectuée avec succès. Votre ticket a été généré.');
+    } else {
+        // Créer la réservation mais la marquer comme en attente de validation
+        Reservation::create([
+            'place_number' => 1, // Réserver une seule place
+            'user_id' => auth()->id(),
+            'event_id' => $event->id,
+            'reservations_date' => now(), // Automatiquement définie la date actuelle
+            'status' => 'waiting', // Marquer comme en attente de validation
+        ]);
+
+        // Mettre à jour la variable $alreadyReserved
+        $alreadyReserved = true;
+
+        return redirect()->back()->with(compact('alreadyReserved'))->with('success', 'Votre demande de réservation a été soumise avec succès. Elle est en attente de validation par l\'organisateur.');
     }
+}
+
+
+
     
     
 }
