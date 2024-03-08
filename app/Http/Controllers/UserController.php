@@ -74,13 +74,22 @@ class UserController extends Controller
     }
 
     // Supprimer un utilisateur de la base de données (soft delete)
+    // public function destroy(User $user)
+    // {
+    //     if ($user->role === 'user' || $user->role === 'organizer' ) {
+    //         $user->delete();
+    //         return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
+    //     } else {
+    //         return redirect()->route('admin.users')->with('error', 'Cannot delete user with role other than "user".');
+    //     }
+    // }
+
+    // Supprimer un utilisateur de la base de données (soft delete)
     public function destroy(User $user)
     {
-        if ($user->role === 'user' || $user->role === 'organizer' ) {
-            $user->delete();
-            return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
-        } else {
-            return redirect()->route('admin.users')->with('error', 'Cannot delete user with role other than "user".');
-        }
+        $user->delete();
+
+        // Rediriger avec un message de succès
+        return redirect()->route('users.index')->with('success', 'User soft-deleted successfully.');
     }
 }

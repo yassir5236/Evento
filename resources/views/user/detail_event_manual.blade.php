@@ -34,45 +34,44 @@
                             {{ $event->Mode_Validation_auto_manuel }}</p>
                     </div>
                     <hr class="my-6">
-                    <!-- Bouton pour envoyer une demande de réservation -->
-                    @if ($alreadyReserved)
-                        <form action="{{ route('events.reserve', $event) }}" method="post">
-                            @csrf
-                            <div class="mb-4">
-                                <label for="place_number"
-                                    class="block text-gray-700 text-sm font-bold mb-2">Nombre de places :</label>
-                                <input type="hidden" name="place_number" value="1">
-                                <!-- Réserver une seule place -->
-                                <input type="text" id="place_number" name="place_number" value="1" disabled
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </div>
-                            <div class="flex items-center justify-center">
-                                <button type="submit"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                    id="reservationButton">demande envoyee</button>
-                            </div>
-                        </form>
-
-                   
-                   @elseif (!$alreadyReserved)
-                    <form action="{{ route('events.reserve', $event) }}" method="post">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="place_number"
-                                class="block text-gray-700 text-sm font-bold mb-2">Nombre de places :</label>
-                            <input type="hidden" name="place_number" value="1">
-                            <!-- Réserver une seule place -->
-                            <input type="text" id="place_number" name="place_number" value="1" disabled
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-                        <div class="flex items-center justify-center">
-                            <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                id="reservationButton">demande envoyee</button>
-                        </div>
-                    </form>
-
-                @endif
+                    @if (auth()->user()->role === 'user')
+                        <!-- Bouton pour envoyer une demande de réservation -->
+                        @if ($alreadyReserved)
+                            <form action="{{ route('events.reserve', $event) }}" method="post">
+                                @csrf
+                                <div class="mb-4">
+                                    <label for="place_number" class="block text-gray-700 text-sm font-bold mb-2">Nombre
+                                        de places :</label>
+                                    <input type="hidden" name="place_number" value="1">
+                                    <!-- Réserver une seule place -->
+                                    <input type="text" id="place_number" name="place_number" value="1" disabled
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <div class="flex items-center justify-center">
+                                    <button type="submit"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        id="reservationButton">demande envoyee</button>
+                                </div>
+                            </form>
+                        @elseif (!$alreadyReserved)
+                            <form action="{{ route('events.reserve', $event) }}" method="post">
+                                @csrf
+                                <div class="mb-4">
+                                    <label for="place_number" class="block text-gray-700 text-sm font-bold mb-2">Nombre
+                                        de places :</label>
+                                    <input type="hidden" name="place_number" value="1">
+                                    <!-- Réserver une seule place -->
+                                    <input type="text" id="place_number" name="place_number" value="1" disabled
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <div class="flex items-center justify-center">
+                                    <button type="submit"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        id="reservationButton">demande envoyee</button>
+                                </div>
+                            </form>
+                        @endif
+                    @endif
                 </div>
             </div>
         </div>

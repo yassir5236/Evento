@@ -175,6 +175,8 @@
                     </div>
                     <hr class="my-6">
                     <!-- Formulaire de réservation -->
+                    @if (auth()->user()->role === 'user')
+
                     @if ($alreadyReserved)
                         <button type="button"
                             class="bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded cursor-not-allowed"
@@ -197,6 +199,7 @@
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Réserver</button>
                             </div>
                         </form>
+                    @endif
                     @endif
                 </div>
             </div>

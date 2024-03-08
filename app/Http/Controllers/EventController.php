@@ -16,13 +16,26 @@ class EventController extends Controller
 
 
 
-        public function index()
-    {
-        $events = Event::paginate(10);
-        $categories = EventCategory::all(); // Récupérer toutes les catégories d'événements
-        return view('user.index', compact('events', 'categories'));
-    }
+    //     public function index()
+    // {
+    //     $events = Event::paginate(10);
+    //     $categories = EventCategory::all(); // Récupérer toutes les catégories d'événements
+    //     return view('user.index', compact('events', 'categories'));
+    // }
 
+    public function index()
+{
+    $events = Event::where('status', 'published')->paginate(10);
+    $categories = EventCategory::all(); // Récupérer toutes les catégories d'événements
+    return view('user.index', compact('events', 'categories'));
+}
+
+public function indexOrganizer()
+{
+    $events = Event::where('status', 'pending')->paginate(10);
+    $categories = EventCategory::all(); // Récupérer toutes les catégories d'événements
+    return view('organizer.pending_events', compact('events', 'categories'));
+}
 
     // Afficher le formulaire pour créer un nouvel événement
     public function create()
@@ -36,7 +49,6 @@ class EventController extends Controller
     // Enregistrer un nouvel événement dans la base de données
     public function store(Request $request)
     {
-        // dd($request);
         $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
@@ -44,14 +56,12 @@ class EventController extends Controller
             'location' => 'required|string',
             'available_seats' => 'required|integer',
             'Mode_Validation_auto_manuel' => 'required',
-
+            'statut' => 'required|string',
         ]);
-
-        // dd($request->input(''));
 
         Event::create($request->all());
 
-        return redirect()->route('events.index')->with('success', 'Event created successfully.');
+        return redirect()->route('events.indexOrganizer')->with('success', 'Event created successfully.');
     }
 
 //     public function store(Request $request)
@@ -226,32 +236,53 @@ public function reject(Event $event)
         ]);
 
     
-        return redirect()->route('events.index')->with('success', 'Event updated successfully.');
+        return redirect()->route('events.indexOrganizer')->with('success', 'Event updated successfully.');
     }
     // Supprimer un événement de la base de données
     public function destroy(Event $event)
     {
         $event->delete();
 
-        return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
+        return redirect()->route('events.indexOrganizer')->with('success', 'Event deleted successfully.');
     }
 
-    public function filter(Request $request)
-    {
+    // public function filter(Request $request)
+    // {
 
-        $categoryId = $request->input('category_id');
-        // Vérifier si une catégorie a été sélectionnée
-        if ($categoryId) {
-            // Récupérer les événements associés à la catégorie sélectionnée
-            $events = Event::where('category_id', $categoryId)->paginate(10);
-        } else {
-            // Si aucune catégorie n'est sélectionnée, afficher tous les événements
-            $events = Event::paginate(10);
-        }
+    //     $categoryId = $request->input('category_id');
+    //     // Vérifier si une catégorie a été sélectionnée
+    //     if ($categoryId) {
+    //         // Récupérer les événements associés à la catégorie sélectionnée
+    //         $events = Event::where('category_id', $categoryId)->paginate(10);
+    //     } else {
+    //         // Si aucune catégorie n'est sélectionnée, afficher tous les événements
+    //         $events = Event::paginate(10);
+    //     }
     
-        $categories = EventCategory::all(); // Récupérer toutes les catégories d'événements
-        return view('user.index', compact('events', 'categories'));  
-      }
+    //     $categories = EventCategory::all(); // Récupérer toutes les catégories d'événements
+    //     return view('user.index', compact('events', 'categories'));  
+    // }
+
+
+    public function filter(Request $request)
+{
+    $categoryId = $request->input('category_id');
+    
+    // Vérifier si une catégorie a été sélectionnée
+    if ($categoryId) {
+        // Récupérer les événements associés à la catégorie sélectionnée et qui ont le statut "published"
+        $events = Event::where('category_id', $categoryId)
+                    ->where('status', 'published')
+                    ->paginate(10);
+    } else {
+        // Si aucune catégorie n'est sélectionnée, afficher tous les événements ayant le statut "published"
+        $events = Event::where('status', 'published')->paginate(10);
+    }
+
+    $categories = EventCategory::all(); // Récupérer toutes les catégories d'événements
+    return view('user.index', compact('events', 'categories'));  
+}
+
     
 
 

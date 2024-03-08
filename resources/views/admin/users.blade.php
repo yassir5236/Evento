@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach ($users as $user)
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -25,7 +25,7 @@
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900 font-semibold bg-red-100 hover:bg-red-200 rounded-md px-4 py-2 transition duration-300 ease-in-out">Delete</button>
+                                <button type="submit" class="text-red-600 hover:text-red-900 font-semibold bg-red-100 hover:bg-red-200 rounded-md px-4 py-2 transition duration-300 ease-in-out"> soft Delete</button>
                             </form>
                         </div>
                     </div>

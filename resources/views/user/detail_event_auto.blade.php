@@ -33,36 +33,42 @@
                         <p class="text-gray-600"><strong>Validation Mode:</strong>
                             {{ $event->Mode_Validation_auto_manuel }}</p>
 
+                        @if (auth()->user()->role === 'user')
                             <!-- Bouton pour afficher le ticket généré -->
-                    @if($ticket)
-                    <a href="{{ route('tickets.show', $ticket) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Voir le ticket</a>
-                    @endif
+                            @if ($ticket)
+                                <a href="{{ route('tickets.show', $ticket) }}"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Voir
+                                    le ticket</a>
+                            @endif
+                        @endif
                     </div>
                     <hr class="my-6">
                     <!-- Formulaire de réservation -->
-                   
-                    @if ($alreadyReserved)
-                        <button type="button"
-                            class="bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded cursor-not-allowed"
-                            disabled>Déjà réservé</button>
-                    @else
-                        <form action="{{ route('events.reserve', $event) }}" method="post"
-                            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                            @csrf
-                            <div class="mb-4">
-                                <label for="place_number" class="block text-gray-700 text-sm font-bold mb-2">Nombre de
-                                    places :</label>
-                                <input type="number" id="place_number" name="place_number" min="1"
-                                    value="1"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </div>
-                            <input type="hidden" id="reservations_date" name="reservations_date"
-                                value="{{ now() }}">
-                            <div class="flex items-center justify-center">
-                                <button type="submit"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Réserver</button>
-                            </div>
-                        </form>
+                    @if (auth()->user()->role === 'user')
+                        @if ($alreadyReserved)
+                            <button type="button"
+                                class="bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded cursor-not-allowed"
+                                disabled>Déjà réservé</button>
+                        @else
+                            <form action="{{ route('events.reserve', $event) }}" method="post"
+                                class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                                @csrf
+                                <div class="mb-4">
+                                    <label for="place_number" class="block text-gray-700 text-sm font-bold mb-2">Nombre
+                                        de
+                                        places :</label>
+                                    <input type="number" id="place_number" name="place_number" min="1"
+                                        value="1"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <input type="hidden" id="reservations_date" name="reservations_date"
+                                    value="{{ now() }}">
+                                <div class="flex items-center justify-center">
+                                    <button type="submit"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Réserver</button>
+                                </div>
+                            </form>
+                        @endif
                     @endif
                 </div>
             </div>

@@ -64,7 +64,19 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
+        // 'role' => \App\Http\Middleware\RoleMiddleware::class,
+        // 'organizer' => \App\Http\Middleware\RoleMiddleware::class,
+        // 'admin' => \App\Http\Middleware\RoleMiddleware::class,
+        // 'user' => \App\Http\Middleware\RoleMiddleware::class,
+
+       
+        'role.user' => \App\Http\Middleware\CheckRoleUser::class,
+        'role.admin' => \App\Http\Middleware\CheckRoleAdmin::class,
+        'role.organizer' => \App\Http\Middleware\CheckRoleOrganizer::class,
+    
+        
+
+
 
     ];
 }

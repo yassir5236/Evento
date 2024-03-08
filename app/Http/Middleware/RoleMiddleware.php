@@ -21,9 +21,10 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next, ...$roles)
+    public function handle($request, Closure $next)
     {
         $user = Auth::user();
+        $roles = ['user', 'organizer', 'admin'];
 
         // Vérifier si l'utilisateur est connecté
         if (!$user) {
@@ -32,6 +33,7 @@ class RoleMiddleware
 
         // Vérifier si le rôle de l'utilisateur est autorisé
         if (!in_array($user->role, $roles)) {
+            
             abort(403, 'Forbidden');
         }
 
